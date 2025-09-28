@@ -1,8 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://bvw6b4ck2vcqa"]
+[gd_scene load_steps=18 format=3 uid="uid://bvw6b4ck2vcqa"]
 
 [ext_resource type="Texture2D" uid="uid://bjxcdpddixeis" path="res://assets/forward.png" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://b1o6tgapkhpvv" path="res://scripts/player.gd" id="1_dqkch"]
 [ext_resource type="Texture2D" uid="uid://dqqb8c8kioxcl" path="res://assets/backwards.png" id="1_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://bxrvqbv60g0yn" path="res://assets/sideways.png" id="3_dqkch"]
+[ext_resource type="Texture2D" uid="uid://bgpjtd5d2fk6c" path="res://assets/success.png" id="5_qlg0r"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlg0r"]
 atlas = ExtResource("1_qhqgy")
@@ -39,6 +41,10 @@ region = Rect2(32, 0, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_y4r1p"]
 atlas = ExtResource("3_dqkch")
 region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2wvv"]
+atlas = ExtResource("5_qlg0r")
+region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qlg0r"]
 animations = [{
@@ -83,11 +89,25 @@ animations = [{
 "loop": true,
 "name": &"sideways",
 "speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2wvv")
+}],
+"loop": true,
+"name": &"success",
+"speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_qlg0r"]
+radius = 16.0
+
 [node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_dqkch")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_qlg0r")
-animation = &"sideways"
-frame_progress = 0.5781077
+animation = &"forward"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qlg0r")

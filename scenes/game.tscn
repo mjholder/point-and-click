@@ -1,3 +1,20 @@
-[gd_scene format=3 uid="uid://cyq487e0vyehm"]
+[gd_scene load_steps=5 format=3 uid="uid://cyq487e0vyehm"]
 
-[node name="game" type="Node2D"]
+[ext_resource type="PackedScene" uid="uid://be80gx355jmdg" path="res://scenes/level.tscn" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://cey3ursb6oepk" path="res://scripts/game.gd" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://bvw6b4ck2vcqa" path="res://scenes/player.tscn" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://b8y7hj833u4b7" path="res://scenes/cat.tscn" id="4_lbhrr"]
+
+[node name="game" type="Node2D" node_paths=PackedStringArray("player", "level", "cat")]
+script = ExtResource("1_yqjtg")
+player = NodePath("Player")
+level = NodePath("level")
+cat = NodePath("cat")
+
+[node name="level" parent="." instance=ExtResource("1_uwrxv")]
+
+[node name="Player" parent="." instance=ExtResource("3_lnu2h")]
+position = Vector2(16, 16)
+
+[node name="cat" parent="." instance=ExtResource("4_lbhrr")]
+position = Vector2(144, 144)
