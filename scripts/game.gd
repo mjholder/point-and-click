@@ -8,6 +8,8 @@ func _ready():
 	pass
 
 func _input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+	if event.is_action_pressed("click"):
 		var mouse_pos = get_global_mouse_position()
 		level.onClick(mouse_pos)
+	if event.is_action_pressed("reset"):
+		level._reset_board()

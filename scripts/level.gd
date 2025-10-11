@@ -19,3 +19,8 @@ func onClick(coords: Vector2):
 	if tile != EMPTY:
 		map.set_cell(tile, HIGHLIGHT, atlas_coords)
 			
+func _reset_board():
+	for tile in map.get_used_cells():
+		var source_id = map.get_cell_source_id(tile)
+		if source_id == HIGHLIGHT:
+			map.set_cell(tile, TILE, atlas_coords)
