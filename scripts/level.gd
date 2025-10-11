@@ -7,6 +7,7 @@ var TILE: int = 0
 var HIGHLIGHT: int = 1
 var EMPTY: Vector2 = Vector2(-1, -1)
 
+
 func _get_tile(coords: Vector2) -> Vector2:
 	var cell = map.local_to_map(coords)
 	var cell_data = map.get_cell_tile_data(cell)
@@ -14,11 +15,15 @@ func _get_tile(coords: Vector2) -> Vector2:
 		return cell
 	return EMPTY
 
-func onClick(coords: Vector2):
+func highlight(coords: Vector2):
 	var tile = _get_tile(coords)
 	if tile != EMPTY:
 		map.set_cell(tile, HIGHLIGHT, atlas_coords)
-			
+
+func highlight_path(path: PackedVector2Array):
+	for tile in path:
+		map.set_cell(map.local_to_map(tile), HIGHLIGHT, atlas_coords)
+		
 func _reset_board():
 	for tile in map.get_used_cells():
 		var source_id = map.get_cell_source_id(tile)
