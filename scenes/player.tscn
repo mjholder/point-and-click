@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://bvw6b4ck2vcqa"]
+[gd_scene load_steps=19 format=3 uid="uid://bvw6b4ck2vcqa"]
 
 [ext_resource type="Texture2D" uid="uid://bjxcdpddixeis" path="res://assets/forward.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://b1o6tgapkhpvv" path="res://scripts/player.gd" id="1_dqkch"]
 [ext_resource type="Texture2D" uid="uid://dqqb8c8kioxcl" path="res://assets/backwards.png" id="1_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://bxrvqbv60g0yn" path="res://assets/sideways.png" id="3_dqkch"]
 [ext_resource type="Texture2D" uid="uid://bgpjtd5d2fk6c" path="res://assets/success.png" id="5_qlg0r"]
+[ext_resource type="Script" uid="uid://o1e8mw84nxch" path="res://scripts/state_machine.gd" id="6_tuyoq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlg0r"]
 atlas = ExtResource("1_qhqgy")
@@ -111,3 +112,6 @@ animation = &"forward"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qlg0r")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("6_tuyoq")
