@@ -1,11 +1,14 @@
 class_name IdleState
 extends State
 
+@export var animated_sprite: AnimatedSprite2D
+@export var animation_name: String = "idle"
+
 func enter():
-    pass
+    animated_sprite.play(animation_name)
 
 func exit():
-    pass
+    animated_sprite.stop()
 
 func update(delta: float):
     pass

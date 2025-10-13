@@ -1,7 +1,7 @@
 class_name State
 extends Node
 
-func enter():
+func enter(options: Dictionary = {}):
     pass
 
 func exit():
