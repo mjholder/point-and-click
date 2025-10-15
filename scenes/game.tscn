@@ -24,3 +24,6 @@ position = Vector2(144, 144)
 [node name="pathfinder" type="Node" parent="." node_paths=PackedStringArray("level")]
 script = ExtResource("5_iywne")
 level = NodePath("../level")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(128, 128)
