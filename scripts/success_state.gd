@@ -1,7 +1,7 @@
 class_name SuccessState
 extends State
 
-func enter():
+func enter(options: Dictionary = {}):
     pass
 
 func exit():
