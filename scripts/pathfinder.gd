@@ -34,3 +34,30 @@ func get_path_array(start: Vector2, end: Vector2) -> PackedVector2Array:
 	var start_id = _cell_to_id(start_tile)
 	var end_id = _cell_to_id(end_tile)
 	return astar.get_point_path(start_id, end_id)
+
+func get_retreating_path_array(target: Vector2, current: Vector2, distance: int) -> PackedVector2Array:
+	var neighbors = [
+		Vector2(1, 0), Vector2(-1, 0),
+		Vector2(0, 1), Vector2(0, -1)
+	]
+	var max_distance = 0
+	var furthest_neighbor = current
+	var path: PackedVector2Array = []
+	if distance > 0:
+		for neighbor in neighbors:
+			var neighbor_tile = current + neighbor
+			if level.map.get_cell_source_id(neighbor_tile) != -1:
+				var new_distance = _calculate_distance(target, level.map.map_to_local(neighbor_tile))
+				if new_distance > max_distance:
+					max_distance = new_distance
+					furthest_neighbor = neighbor_tile
+		path.append(level.map.map_to_local(furthest_neighbor))
+		path.append_array(get_retreating_path_array(target, furthest_neighbor, distance - 1))
+		print(path)
+		return path
+	else:
+		path.append(current)
+		return path
+
+func _calculate_distance(target: Vector2, current: Vector2) -> int:
+	return abs(target.x - current.x) + abs(target.y - current.y)
