@@ -28,12 +28,16 @@ func _build_astar():
 				if astar.has_point(neighbor_id):
 					astar.connect_points(id, neighbor_id)
 
-func get_path_array(start: Vector2, end: Vector2) -> PackedVector2Array:
+func get_path_array(start: Vector2, end: Vector2, distance: int) -> PackedVector2Array:
 	var start_tile = level.map.local_to_map(start)
 	var end_tile = level.map.local_to_map(end)
 	var start_id = _cell_to_id(start_tile)
 	var end_id = _cell_to_id(end_tile)
-	return astar.get_point_path(start_id, end_id)
+	var path = astar.get_point_path(start_id, end_id)
+	if distance > path.size():
+		return path
+	else:
+		return path.slice(0, distance)
 
 func get_retreating_path_array(target: Vector2, current: Vector2, distance: int, previous_direction: Vector2i) -> PackedVector2Array:
 	var neighbors = [
@@ -51,10 +55,12 @@ func get_retreating_path_array(target: Vector2, current: Vector2, distance: int,
 			if level.map.get_cell_source_id(neighbor_tile) != -1:
 				var new_distance = _calculate_distance(target, level.map.map_to_local(neighbor_tile))
 				print("current", current_tile, "target", level.map.local_to_map(target), "neighbor", neighbor_tile, "new_distance", new_distance)
-				if new_distance > max_distance:
+				if is_reversing(neighbor, previous_direction):
+					continue
+				elif new_distance > max_distance:
 					max_distance = new_distance
 					furthest_neighbor = neighbor_tile
-				if new_distance == max_distance and neighbor != previous_direction:
+				elif new_distance == max_distance and neighbor != previous_direction:
 					furthest_neighbor_direction = neighbor
 					furthest_neighbor = neighbor_tile
 		print(furthest_neighbor, " is the furthest neighbor from ", level.map.local_to_map(target), " at distance ", max_distance)
@@ -65,6 +71,9 @@ func get_retreating_path_array(target: Vector2, current: Vector2, distance: int,
 	else:
 		path.append(current)
 		return path
+
+func is_reversing(direction: Vector2i, previous_direction: Vector2i) -> bool:
+	return direction + previous_direction == Vector2i.ZERO
 
 func _calculate_distance(target: Vector2, current: Vector2) -> int:
 	return abs(target.x - current.x) + abs(target.y - current.y)

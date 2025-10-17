@@ -9,14 +9,16 @@ func enter(options: Dictionary = {}):
 	if direction == "forward":
 		animated_sprite.play(animation_name)
 		animated_sprite.flip_v = false
+		animated_sprite.rotation_degrees = 0
 	elif direction == "backward":
 		animated_sprite.play(animation_name)
 		animated_sprite.flip_v = true
+		animated_sprite.rotation_degrees = 0
 	elif direction == "left":
-		animated_sprite.flip_h = true
+		animated_sprite.rotation_degrees = 90
 		animated_sprite.play(animation_name)
 	elif direction == "right":
-		animated_sprite.flip_h = false
+		animated_sprite.rotation_degrees = -90
 		animated_sprite.play(animation_name)
 
 func exit():

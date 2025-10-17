@@ -72,8 +72,11 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_se5fe"]
 radius = 12.0415945
 
-[node name="cat" type="CharacterBody2D"]
+[node name="cat" type="CharacterBody2D" node_paths=PackedStringArray("state_machine", "idle_state", "cat_walk_state")]
 script = ExtResource("1_tol8a")
+state_machine = NodePath("StateMachine")
+idle_state = NodePath("StateMachine/IdleState")
+cat_walk_state = NodePath("StateMachine/CatWalkState")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_v4p53")
@@ -92,6 +95,7 @@ script = ExtResource("4_tol8a")
 animated_sprite = NodePath("../../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://de6viuk0rkqlc"
 
-[node name="State" type="Node" parent="StateMachine"]
+[node name="CatWalkState" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite")]
 script = ExtResource("5_cxap7")
+animated_sprite = NodePath("../../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://dkal68v75f5n7"
