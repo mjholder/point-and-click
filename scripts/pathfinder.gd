@@ -35,24 +35,31 @@ func get_path_array(start: Vector2, end: Vector2) -> PackedVector2Array:
 	var end_id = _cell_to_id(end_tile)
 	return astar.get_point_path(start_id, end_id)
 
-func get_retreating_path_array(target: Vector2, current: Vector2, distance: int) -> PackedVector2Array:
+func get_retreating_path_array(target: Vector2, current: Vector2, distance: int, previous_direction: Vector2i) -> PackedVector2Array:
 	var neighbors = [
-		Vector2(1, 0), Vector2(-1, 0),
-		Vector2(0, 1), Vector2(0, -1)
+		Vector2i(1, 0), Vector2i(-1, 0),
+		Vector2i(0, 1), Vector2i(0, -1)
 	]
+	var current_tile = level.map.local_to_map(current)
 	var max_distance = 0
-	var furthest_neighbor = current
+	var furthest_neighbor = current_tile
+	var furthest_neighbor_direction = Vector2i.ZERO
 	var path: PackedVector2Array = []
 	if distance > 0:
 		for neighbor in neighbors:
-			var neighbor_tile = current + neighbor
+			var neighbor_tile = current_tile + neighbor
 			if level.map.get_cell_source_id(neighbor_tile) != -1:
 				var new_distance = _calculate_distance(target, level.map.map_to_local(neighbor_tile))
+				print("current", current_tile, "target", level.map.local_to_map(target), "neighbor", neighbor_tile, "new_distance", new_distance)
 				if new_distance > max_distance:
 					max_distance = new_distance
 					furthest_neighbor = neighbor_tile
+				if new_distance == max_distance and neighbor != previous_direction:
+					furthest_neighbor_direction = neighbor
+					furthest_neighbor = neighbor_tile
+		print(furthest_neighbor, " is the furthest neighbor from ", level.map.local_to_map(target), " at distance ", max_distance)
 		path.append(level.map.map_to_local(furthest_neighbor))
-		path.append_array(get_retreating_path_array(target, furthest_neighbor, distance - 1))
+		path.append_array(get_retreating_path_array(target, level.map.map_to_local(furthest_neighbor), distance - 1, furthest_neighbor_direction))
 		print(path)
 		return path
 	else:
