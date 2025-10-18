@@ -4,18 +4,26 @@ extends CharacterBody2D
 @export var state_machine: StateMachine
 @export var idle_state: IdleState
 @export var cat_walk_state: CatWalkState
+@export var cat_success_state: CatSuccessState
 var path: PackedVector2Array = []
 @export var speed: float = 100
+@export var success_speed: float = 30
 
 signal captured(cat: Cat)
+var is_captured: bool = false
+var is_at_destination: bool = false
 
 func _ready():
 	state_machine.change_state(idle_state)
 	$CatInteraction.body_entered.connect(_on_player_entered)
 
 func _physics_process(delta: float):
+	if is_captured and is_at_destination:
+		_on_cat_success_state_complete()
+		return
 	if path.is_empty():
 		return
+	is_at_destination = false
 	var next_position = path[0]
 	var direction = (next_position - global_position).normalized()
 	direction.x = round(direction.x)
@@ -45,7 +53,11 @@ func set_path(_path: PackedVector2Array):
 	path = _path
 	
 func _on_path_complete():
-	state_machine.change_state(idle_state)
+	is_at_destination = true
+	if is_captured:
+		_on_cat_success_state_complete()
+	else:
+		state_machine.change_state(idle_state)
 ##
 ## Walk in a given direction
 ## @param direction The direction to walk in. Can be "forward", "backward", "left", or "right"
@@ -55,4 +67,15 @@ func walk(direction: String):
 
 func _on_player_entered(body: Node2D):
 	if body is Player:
+		is_captured = true
 		captured.emit(self)
+
+func _on_cat_success_state_complete():
+	state_machine.change_state(cat_success_state)
+	var direction = Vector2(0, 1)
+	velocity = direction * success_speed
+	var destination = global_position + direction * 32
+	move_and_slide()
+
+	if global_position.distance_to(destination) < 2:
+		queue_free()
