@@ -16,3 +16,7 @@ func _input(event):
 		cat.set_path(cat_path)
 	if event.is_action_pressed("reset"):
 		level._reset_board()
+
+
+func _on_cat_captured(_cat: Cat) -> void:
+	player.success()

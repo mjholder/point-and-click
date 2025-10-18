@@ -7,8 +7,11 @@ extends CharacterBody2D
 var path: PackedVector2Array = []
 @export var speed: float = 100
 
+signal captured(cat: Cat)
+
 func _ready():
 	state_machine.change_state(idle_state)
+	$CatInteraction.body_entered.connect(_on_player_entered)
 
 func _physics_process(delta: float):
 	if path.is_empty():
@@ -49,3 +52,7 @@ func _on_path_complete():
 ##
 func walk(direction: String):
 	state_machine.change_state(cat_walk_state, {"direction": direction})
+
+func _on_player_entered(body: Node2D):
+	if body is Player:
+		captured.emit(self)

@@ -73,6 +73,8 @@ animations = [{
 radius = 12.0415945
 
 [node name="cat" type="CharacterBody2D" node_paths=PackedStringArray("state_machine", "idle_state", "cat_walk_state")]
+collision_layer = 4
+collision_mask = 2
 script = ExtResource("1_tol8a")
 state_machine = NodePath("StateMachine")
 idle_state = NodePath("StateMachine/IdleState")
@@ -99,3 +101,9 @@ metadata/_custom_type_script = "uid://de6viuk0rkqlc"
 script = ExtResource("5_cxap7")
 animated_sprite = NodePath("../../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://dkal68v75f5n7"
+
+[node name="CatInteraction" type="Area2D" parent="."]
+collision_layer = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CatInteraction"]
+shape = SubResource("CircleShape2D_se5fe")

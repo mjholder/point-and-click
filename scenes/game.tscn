@@ -17,6 +17,8 @@ pathfinder = NodePath("pathfinder")
 
 [node name="Player" parent="." instance=ExtResource("3_lnu2h")]
 position = Vector2(16, 16)
+collision_layer = 15
+collision_mask = 11
 
 [node name="cat" parent="." instance=ExtResource("4_lbhrr")]
 position = Vector2(144, 144)
@@ -27,3 +29,5 @@ level = NodePath("../level")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(128, 128)
+
+[connection signal="captured" from="cat" to="." method="_on_cat_captured"]

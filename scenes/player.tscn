@@ -119,6 +119,7 @@ animations = [{
 radius = 16.0
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("state_machine", "idle_state", "walking_state", "success_state")]
+collision_mask = 2
 script = ExtResource("1_dqkch")
 state_machine = NodePath("StateMachine")
 idle_state = NodePath("StateMachine/IdleState")
@@ -127,7 +128,7 @@ success_state = NodePath("StateMachine/SuccessState")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_qlg0r")
-animation = &"idle"
+animation = &"success"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qlg0r")
@@ -144,6 +145,7 @@ script = ExtResource("8_y4r1p")
 animated_sprite = NodePath("../../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://dkal68v75f5n7"
 
-[node name="SuccessState" type="Node" parent="StateMachine"]
+[node name="SuccessState" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite")]
 script = ExtResource("9_d2wvv")
+animated_sprite = NodePath("../../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://dkal68v75f5n7"
