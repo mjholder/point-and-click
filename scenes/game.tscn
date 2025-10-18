@@ -12,6 +12,7 @@ player = NodePath("Player")
 level = NodePath("level")
 cat = NodePath("cat")
 pathfinder = NodePath("pathfinder")
+cat_distance = 0
 
 [node name="level" parent="." instance=ExtResource("1_uwrxv")]
 

@@ -7,6 +7,7 @@ extends CharacterBody2D
 @export var success_state: SuccessState
 var path: PackedVector2Array = []
 @export var speed: float = 100
+var is_success: bool = false
 
 func _ready():
 	state_machine.change_state(idle_state)
@@ -43,7 +44,12 @@ func set_path(_path: PackedVector2Array):
 	path = _path
 	
 func _on_path_complete():
-	state_machine.change_state(idle_state)
+	if is_success:
+		state_machine.change_state(success_state)
+	else:
+		state_machine.change_state(idle_state)
+
+	is_success = false
 ##
 ## Walk in a given direction
 ## @param direction The direction to walk in. Can be "forward", "backward", "left", or "right"
@@ -52,7 +58,7 @@ func walk(direction: String):
 	state_machine.change_state(walking_state, {"direction": direction})
 
 func success():
-	state_machine.change_state(success_state)
+	is_success = true
 
 func idle():
 	state_machine.change_state(idle_state)
