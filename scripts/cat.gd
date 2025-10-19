@@ -12,6 +12,7 @@ var path: PackedVector2Array = []
 signal captured(cat: Cat)
 var is_captured: bool = false
 var is_at_destination: bool = false
+var destination: Vector2 = Vector2.ZERO
 
 func _ready():
 	state_machine.change_state(idle_state)
@@ -72,10 +73,7 @@ func _on_player_entered(body: Node2D):
 
 func _on_cat_success_state_complete():
 	state_machine.change_state(cat_success_state)
-	var direction = Vector2(0, 1)
-	velocity = direction * success_speed
-	var destination = global_position + direction * 32
-	move_and_slide()
 
-	if global_position.distance_to(destination) < 2:
-		queue_free()
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	queue_free()

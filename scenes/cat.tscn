@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b8y7hj833u4b7"]
+[gd_scene load_steps=20 format=3 uid="uid://b8y7hj833u4b7"]
 
 [ext_resource type="Texture2D" uid="uid://dg1c8xaxlhb7c" path="res://assets/cat_idle.png" id="1_se5fe"]
 [ext_resource type="Script" uid="uid://b7vodsd2ktq2x" path="res://scripts/cat.gd" id="1_tol8a"]
@@ -73,6 +73,43 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_se5fe"]
 radius = 12.0415945
 
+[sub_resource type="Animation" id="Animation_o55mh"]
+resource_name = "success"
+length = 6.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(3),
+"transitions": PackedFloat32Array(2.2973979),
+"update": 0,
+"values": [Vector2(0, -32)]
+}
+
+[sub_resource type="Animation" id="Animation_ic5u8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8px16"]
+_data = {
+&"RESET": SubResource("Animation_ic5u8"),
+&"success": SubResource("Animation_o55mh")
+}
+
 [node name="cat" type="CharacterBody2D" node_paths=PackedStringArray("state_machine", "idle_state", "cat_walk_state", "cat_success_state")]
 collision_layer = 4
 collision_mask = 2
@@ -85,9 +122,6 @@ cat_success_state = NodePath("StateMachine/CatSuccessState")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_v4p53")
 animation = &"idle"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_se5fe")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("3_cxap7")
@@ -103,9 +137,10 @@ script = ExtResource("5_cxap7")
 animated_sprite = NodePath("../../AnimatedSprite2D")
 metadata/_custom_type_script = "uid://dkal68v75f5n7"
 
-[node name="CatSuccessState" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite")]
+[node name="CatSuccessState" type="Node" parent="StateMachine" node_paths=PackedStringArray("animated_sprite", "animation_player")]
 script = ExtResource("7_o55mh")
 animated_sprite = NodePath("../../AnimatedSprite2D")
+animation_player = NodePath("../../AnimationPlayer")
 metadata/_custom_type_script = "uid://dkal68v75f5n7"
 
 [node name="CatInteraction" type="Area2D" parent="."]
@@ -113,3 +148,10 @@ collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CatInteraction"]
 shape = SubResource("CircleShape2D_se5fe")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_8px16")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

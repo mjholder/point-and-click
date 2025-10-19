@@ -5,13 +5,13 @@ extends State
 @export var animation_name: String = "success"
 
 func enter(options: Dictionary = {}):
-    animated_sprite.play(animation_name)
+	animated_sprite.play(animation_name)
 
 func exit():
-    animated_sprite.stop()
+	animated_sprite.stop()
 
 func update(delta: float):
-    pass
+	pass
 
 func physics_update(delta: float):
-    pass
+	pass
