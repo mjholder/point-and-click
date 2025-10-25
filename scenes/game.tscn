@@ -9,32 +9,50 @@
 
 [node name="game" type="Node2D" node_paths=PackedStringArray("player", "level", "cat", "pathfinder")]
 script = ExtResource("1_yqjtg")
-player = NodePath("Player")
-level = NodePath("level")
-cat = NodePath("cat")
+player = NodePath("CanvasLayer2/Player")
+level = NodePath("CanvasLayer2/level")
+cat = NodePath("CanvasLayer2/cat")
 pathfinder = NodePath("pathfinder")
 cat_distance = 0
 
-[node name="Background" type="Sprite2D" parent="."]
-position = Vector2(128, 128)
-scale = Vector2(8, 8)
-texture = ExtResource("2_p57ef")
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+layer = 2
 
-[node name="level" parent="." instance=ExtResource("1_uwrxv")]
+[node name="level" parent="CanvasLayer2" instance=ExtResource("1_uwrxv")]
+position = Vector2(128, 0)
 
-[node name="Player" parent="." instance=ExtResource("3_lnu2h")]
-position = Vector2(16, 17)
+[node name="Player" parent="CanvasLayer2" instance=ExtResource("3_lnu2h")]
+position = Vector2(-112, -112)
 collision_layer = 15
 collision_mask = 11
 
-[node name="cat" parent="." instance=ExtResource("4_lbhrr")]
-position = Vector2(144, 144)
+[node name="cat" parent="CanvasLayer2" instance=ExtResource("4_lbhrr")]
 
 [node name="pathfinder" type="Node" parent="." node_paths=PackedStringArray("level")]
 script = ExtResource("5_iywne")
-level = NodePath("../level")
+level = NodePath("../CanvasLayer2/level")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(128, 128)
+anchor_mode = 0
 
-[connection signal="captured" from="cat" to="." method="_on_cat_captured"]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="GUI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/GUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_p57ef")
+
+[connection signal="captured" from="CanvasLayer2/cat" to="." method="_on_cat_captured"]
