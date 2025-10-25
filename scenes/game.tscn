@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cyq487e0vyehm"]
+[gd_scene load_steps=10 format=3 uid="uid://cyq487e0vyehm"]
 
 [ext_resource type="PackedScene" uid="uid://be80gx355jmdg" path="res://scenes/level.tscn" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://cey3ursb6oepk" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -6,53 +6,70 @@
 [ext_resource type="PackedScene" uid="uid://bvw6b4ck2vcqa" path="res://scenes/player.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://b8y7hj833u4b7" path="res://scenes/cat.tscn" id="4_lbhrr"]
 [ext_resource type="Script" uid="uid://csbc7fsdthw4s" path="res://scripts/pathfinder.gd" id="5_iywne"]
+[ext_resource type="Texture2D" uid="uid://bve8qph2col0o" path="res://assets/end_turn.png" id="7_u5sy4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gee14"]
+atlas = ExtResource("7_u5sy4")
+region = Rect2(0, 6, 32, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0tnpc"]
+atlas = ExtResource("7_u5sy4")
+region = Rect2(32, 6, 32, 20)
 
 [node name="game" type="Node2D" node_paths=PackedStringArray("player", "level", "cat", "pathfinder")]
 script = ExtResource("1_yqjtg")
-player = NodePath("CanvasLayer2/Player")
-level = NodePath("CanvasLayer2/level")
-cat = NodePath("CanvasLayer2/cat")
+player = NodePath("Player")
+level = NodePath("level")
+cat = NodePath("cat")
 pathfinder = NodePath("pathfinder")
 cat_distance = 0
 
-[node name="CanvasLayer2" type="CanvasLayer" parent="."]
-layer = 2
+[node name="background" type="Sprite2D" parent="."]
+scale = Vector2(8, 8)
+texture = ExtResource("2_p57ef")
 
-[node name="level" parent="CanvasLayer2" instance=ExtResource("1_uwrxv")]
-position = Vector2(128, 0)
+[node name="level" parent="." instance=ExtResource("1_uwrxv")]
+visibility_layer = 2
 
-[node name="Player" parent="CanvasLayer2" instance=ExtResource("3_lnu2h")]
-position = Vector2(-112, -112)
+[node name="Player" parent="." instance=ExtResource("3_lnu2h")]
 collision_layer = 15
 collision_mask = 11
 
-[node name="cat" parent="CanvasLayer2" instance=ExtResource("4_lbhrr")]
+[node name="cat" parent="." instance=ExtResource("4_lbhrr")]
 
 [node name="pathfinder" type="Node" parent="." node_paths=PackedStringArray("level")]
 script = ExtResource("5_iywne")
-level = NodePath("../CanvasLayer2/level")
+level = NodePath("../level")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true
 
 [node name="GUI" type="Control" parent="CanvasLayer"]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = -0.5
+anchor_top = -0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="TextureRect" parent="CanvasLayer/GUI"]
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/GUI"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_p57ef")
+offset_left = -298.0
+offset_top = -212.0
+offset_right = -266.0
+offset_bottom = -192.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(8, 8)
+texture_normal = SubResource("AtlasTexture_gee14")
+texture_pressed = SubResource("AtlasTexture_0tnpc")
 
-[connection signal="captured" from="CanvasLayer2/cat" to="." method="_on_cat_captured"]
+[connection signal="captured" from="cat" to="." method="_on_cat_captured"]
