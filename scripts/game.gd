@@ -10,7 +10,7 @@ extends Node2D
 
 func _input(event):
 	if event.is_action_pressed("click"):
-		if not pathfinder.is_valid_cell(level.map.local_to_map(get_global_mouse_position())):
+		if not pathfinder.is_valid_cell(level.map.local_to_map(level.map.to_local(get_global_mouse_position()))):
 			return
 		level._reset_board()
 		var path = pathfinder.get_path_array(player.global_position, get_global_mouse_position(), player_distance)
