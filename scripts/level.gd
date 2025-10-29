@@ -22,7 +22,7 @@ func highlight(coords: Vector2):
 
 func highlight_path(path: PackedVector2Array):
 	for tile in path:
-		map.set_cell(map.local_to_map(tile), HIGHLIGHT, atlas_coords)
+		map.set_cell(map.local_to_map(map.to_local(tile)), HIGHLIGHT, atlas_coords)
 		
 func _reset_board():
 	for tile in map.get_used_cells():

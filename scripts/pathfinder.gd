@@ -14,7 +14,8 @@ func _build_astar():
 	
 	for cell in level.map.get_used_cells():
 		var id = _cell_to_id(cell)
-		astar.add_point(id, level.map.map_to_local(cell))
+		var world_position = level.map.to_global(level.map.map_to_local(cell))
+		astar.add_point(id, world_position)
 
 	for cell in level.map.get_used_cells():
 		var id = _cell_to_id(cell)
@@ -29,8 +30,8 @@ func _build_astar():
 					astar.connect_points(id, neighbor_id)
 
 func get_path_array(start: Vector2, end: Vector2, distance: int) -> PackedVector2Array:
-	var start_tile = level.map.local_to_map(start)
-	var end_tile = level.map.local_to_map(end)
+	var start_tile = _global_to_map(start)
+	var end_tile = _global_to_map(end)
 	var start_id = _cell_to_id(start_tile)
 	var end_id = _cell_to_id(end_tile)
 	var path = astar.get_point_path(start_id, end_id)
@@ -44,7 +45,7 @@ func get_retreating_path_array(target: Vector2, current: Vector2, distance: int,
 		Vector2i(1, 0), Vector2i(-1, 0),
 		Vector2i(0, 1), Vector2i(0, -1)
 	]
-	var current_tile = level.map.local_to_map(current)
+	var current_tile = _global_to_map(current)
 	var max_distance = 0
 	var furthest_neighbor = current_tile
 	var furthest_neighbor_direction = Vector2i.ZERO
@@ -53,7 +54,8 @@ func get_retreating_path_array(target: Vector2, current: Vector2, distance: int,
 		for neighbor in neighbors:
 			var neighbor_tile = current_tile + neighbor
 			if level.map.get_cell_source_id(neighbor_tile) != -1:
-				var new_distance = _calculate_distance(target, level.map.map_to_local(neighbor_tile))
+				var neighbor_global = _map_to_global(neighbor_tile)
+				var new_distance = _calculate_distance(target, neighbor_global)
 				if is_reversing(neighbor, previous_direction):
 					continue
 				elif new_distance > max_distance:
@@ -63,8 +65,8 @@ func get_retreating_path_array(target: Vector2, current: Vector2, distance: int,
 					furthest_neighbor_direction = neighbor
 					furthest_neighbor = neighbor_tile
 
-		path.append(level.map.map_to_local(furthest_neighbor))
-		path.append_array(get_retreating_path_array(target, level.map.map_to_local(furthest_neighbor), distance - 1, furthest_neighbor_direction))
+		path.append(_map_to_global(furthest_neighbor))
+		path.append_array(get_retreating_path_array(target, _map_to_global(furthest_neighbor), distance - 1, furthest_neighbor_direction))
 		return path
 	else:
 		path.append(current)
@@ -74,4 +76,13 @@ func is_reversing(direction: Vector2i, previous_direction: Vector2i) -> bool:
 	return direction + previous_direction == Vector2i.ZERO
 
 func _calculate_distance(target: Vector2, current: Vector2) -> int:
-	return abs(target.x - current.x) + abs(target.y - current.y)
+	return int(abs(target.x - current.x) + abs(target.y - current.y))
+
+func is_valid_cell(cell: Vector2i) -> bool:
+	return level.map.get_cell_source_id(cell) != -1
+
+func _global_to_map(global: Vector2) -> Vector2i:
+	return level.map.local_to_map(level.map.to_local(global))
+
+func _map_to_global(map: Vector2i) -> Vector2:
+	return level.map.to_global(level.map.map_to_local(map))

@@ -8,7 +8,7 @@ extends CharacterBody2D
 var path: PackedVector2Array = []
 @export var speed: float = 100
 @export var success_speed: float = 30
-
+var is_begin_turn: bool = false
 signal captured(cat: Cat)
 var is_captured: bool = false
 var is_at_destination: bool = false
@@ -22,7 +22,7 @@ func _physics_process(delta: float):
 	if is_captured and is_at_destination:
 		_on_cat_success_state_complete()
 		return
-	if path.is_empty():
+	if path.is_empty() or not is_begin_turn:
 		return
 	is_at_destination = false
 	var next_position = path[0]
@@ -54,6 +54,7 @@ func set_path(_path: PackedVector2Array):
 	path = _path
 	
 func _on_path_complete():
+	is_begin_turn = false
 	is_at_destination = true
 	if is_captured:
 		_on_cat_success_state_complete()
@@ -74,6 +75,8 @@ func _on_player_entered(body: Node2D):
 func _on_cat_success_state_complete():
 	state_machine.change_state(cat_success_state)
 
+func begin_turn():
+	is_begin_turn = true
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	queue_free()

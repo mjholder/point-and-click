@@ -8,12 +8,13 @@ extends CharacterBody2D
 var path: PackedVector2Array = []
 @export var speed: float = 100
 var is_success: bool = false
+var is_begin_turn: bool = false
 
 func _ready():
 	state_machine.change_state(idle_state)
 
 func _physics_process(delta: float):
-	if path.is_empty():
+	if path.is_empty() or not is_begin_turn:
 		return
 	var next_position = path[0]
 	var direction = (next_position - global_position).normalized()
@@ -50,6 +51,7 @@ func _on_path_complete():
 		state_machine.change_state(idle_state)
 
 	is_success = false
+	is_begin_turn = false
 ##
 ## Walk in a given direction
 ## @param direction The direction to walk in. Can be "forward", "backward", "left", or "right"
@@ -62,3 +64,6 @@ func success():
 
 func idle():
 	state_machine.change_state(idle_state)
+
+func begin_turn():
+	is_begin_turn = true
