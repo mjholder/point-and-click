@@ -1,0 +1,60 @@
+GODOT COORDINATE SYSTEM OPTIMIZATION GUIDE
+==========================================
+
+After reviewing the code, I can see several opportunities for more idiomatic approaches. The current structure has some inefficiencies due to the mixed coordinate systems. Here are the main issues and potential solutions:
+
+CURRENT ISSUES
+--------------
+
+1. Mixed Coordinate Systems: The code constantly converts between global and local coordinates
+2. Redundant Conversions: level.map.to_local(global) followed by level.map.local_to_map() is essentially doing the same work twice
+3. Inconsistent API: Some functions expect global positions, others expect local positions
+
+MORE IDIOMATIC APPROACHES
+-------------------------
+
+OPTION 1: Standardize on Map Coordinates
+The most idiomatic approach would be to work primarily in map coordinates (Vector2i) throughout the system:
+
+Code Example:
+func get_path_array(start_cell: Vector2i, end_cell: Vector2i, distance: int) -> PackedVector2Array
+func get_retreating_path_array(target_cell: Vector2i, current_cell: Vector2i, ...)
+
+Benefits:
+• No coordinate conversions needed
+• More efficient (no floating point math)
+• Cleaner API
+• TileMap operations are naturally in map coordinates
+
+OPTION 2: Create a Coordinate System Abstraction
+Add a CoordinateSystem helper class that handles all conversions:
+
+Code Example:
+class_name CoordinateSystem
+static func global_to_map(global: Vector2, map: TileMapLayer) -> Vector2i
+static func map_to_global(map_coord: Vector2i, map: TileMapLayer) -> Vector2
+static func is_valid_global_position(global: Vector2, map: TileMapLayer) -> bool
+
+OPTION 3: Restructure Node Hierarchy
+Move the pathfinder to be a child of the Level node, so it can work in the same coordinate space:
+
+Node Structure:
+Level (Node2D)
+├── Map (TileMapLayer)
+├── Pathfinder (Node)  // Now works in local space relative to Level
+├── Player
+└── Cat
+
+RECOMMENDED SOLUTION
+--------------------
+
+I'd recommend Option 1 - standardizing on map coordinates. This would involve:
+
+1. Pathfinder API: Change to accept Vector2i (map coordinates) instead of Vector2 (global positions)
+2. Game Logic: Convert mouse position to map coordinates once at the input level
+3. Path Results: Return map coordinates, convert to global only when setting character positions
+4. Level Highlighting: Work directly with map coordinates
+
+This would eliminate most of the coordinate conversions and make the code much cleaner. The only conversions would be:
+• Mouse input: global_mouse -> map_coord (once)
+• Character movement: map_coord -> global_position (when setting paths)
